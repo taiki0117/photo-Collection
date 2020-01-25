@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_action :require_user_logged_in, only: [:index, :show, :edit] #ログインしていないと表示できないようにしている
+  
   def index     #ユーザー一覧ページ。ユーザーの一覧を取得
     @users = User.order(id: :desc).page(params[:page]).per(10)
   end
