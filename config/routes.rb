@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   
   get "signup", to: "users#new"     #新規作成URLを/signupにするため
   resources :users
+  
+  resources :posts, only: [:edit, :create, :destroy]
 end

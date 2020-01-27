@@ -5,8 +5,10 @@ class UsersController < ApplicationController
     @users = User.order(id: :desc).page(params[:page]).per(10)
   end
 
-  def show      #ユーザー詳細ページ。ユーザー個々のidを取得
-    @user = User.find(params[:id])
+  def show      #ユーザー詳細ページ
+    @user = User.find(params[:id])    #ユーザー個々のidを取得
+    @posts = @user.posts.order(id: :desc).page(params[:page]) #投稿の一覧を取得
+    counts(@user)
   end
 
   def new       #アカウント新規登録ページ。
@@ -18,7 +20,8 @@ class UsersController < ApplicationController
     
     if @user.save
       flash[:success] = "ユーザーを登録しました。"
-      redirect_to @user
+      session[:user_id] = @user.id #このコードを使ってログインしている状態にしてるので二行目のrequire_user_logged_inではじかれない。
+      redirect_to @user  #user_path(@user.id)を略している
     else
       flash[:danger] = "ユーザーの登録に失敗しました。"
       render :new

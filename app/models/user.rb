@@ -6,4 +6,6 @@ class User < ApplicationRecord
                       uniqueness: { case_sensitive: false }                     #登録の重複を許さない。大文字と小文字を区別しない。
     
     has_secure_password    #パスワード付きのモデルなので使用。usersテーブルにパスワードを保存する時暗号化される。
+    
+    has_many :posts     #userから見てpostは複数。この関連付けにより投稿が紐付けになる。
 end
