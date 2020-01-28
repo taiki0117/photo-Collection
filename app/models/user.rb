@@ -36,4 +36,7 @@ class User < ApplicationRecord
       self.followings.include?(other_user)    #self.followings によりフォローしている User 達を取得し、include?(other_user) によって other_user が含まれていないかを確認している。
     end
     
+    def feed_posts   #タイムライン用
+      Post.where(user_id: self.following_ids + [self.id])   #Post.where(user_id: フォローユーザ + 自分自身)となるPostを全て取得している
+    end
 end

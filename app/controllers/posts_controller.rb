@@ -11,7 +11,7 @@ class PostsController < ApplicationController
       flash[:success] = '写真を投稿しました。'
       redirect_to root_url
     else
-      @posts = current_user.posts.order(id: :desc).page(params[:page])
+      @posts = current_user.feed_posts.order(id: :desc).page(params[:page]) #feed_postsでタイムラインに対応させている
       flash.now[:danger] = '写真の投稿に失敗しました。'
       render 'toppages/index'
     end
