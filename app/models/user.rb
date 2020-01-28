@@ -8,4 +8,32 @@ class User < ApplicationRecord
     has_secure_password    #パスワード付きのモデルなので使用。usersテーブルにパスワードを保存する時暗号化される。
     
     has_many :posts     #userから見てpostは複数。この関連付けにより投稿が紐付けになる。
+    
+    has_many :relationships     #自分がたくさんのrelationshipsを持つよという意味
+    
+    has_many :followings, through: :relationships, source: :follow  #自分は[followings]で[relationships]を介して[follow]と繋がるよという意味
+    
+    has_many :reverses_of_relationship, class_name: 'Relationship', foreign_key: 'follow_id'
+    #[reverses_of_relationship]は12行目の[relationships]と名前がかぶるので、名前を変えて逆方向の自分は[relationships]をたくさん持つよと示している
+    #[class_name: 'Relationship']は[reverses_of_relationship]というクラスが存在しないので[relationships]を参照すると示している
+    #[foreign_key: 'follow_id']は自分はuser_idではなく、反対側にいるfollw_idだと示している
+    
+    
+    has_many :followers, through: :reverses_of_relationship, source: :user  #自分は[followers]で逆方法にいるから[reverses_of_relationship]を介して[user]と繋がるよという意味
+    
+    def follow(other_user)
+      unless self == other_user #self には user.follow(other) を実行したとき user が代入される。
+        self.relationships.find_or_create_by(follow_id: other_user.id)  #フォロー関係を保存(create = build + save)することができる
+      end
+    end
+    
+    def unfollow(other_user)    #フォローがあればアンフォローしている
+      relationship = self.relationships.find_by(follow_id: other_user.id)
+      relationship.destroy if relationship
+    end
+    
+    def following?(other_user)
+      self.followings.include?(other_user)    #self.followings によりフォローしている User 達を取得し、include?(other_user) によって other_user が含まれていないかを確認している。
+    end
+    
 end
