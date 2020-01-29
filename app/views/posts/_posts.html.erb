@@ -7,21 +7,19 @@
           <%= link_to post.user.name, user_path(post.user) %> <span class="text-muted">posted at <%= post.created_at %></span>
         </div>
         <div class="row">
-          <% if post.image? #投稿画像を表示している%>
-          <div class="col-sm-5">
-            <%= image_tag post.image.url %>
-          </div>
+          <% if post.image? %>
+            <div class="col-sm-5">
+              <%= image_tag post.image.url %>
+            </div>
           <% end %>
           <div class="col-sm-7">
           <p class="mb-10"><%= simple_format(post.content) %></p>
            <% if current_user == post.user %>
             <%= link_to "削除", post, method: :delete, data: { confirm: "本当に削除してもよろしいですか？" }, class: 'btn btn-danger btn-sm' %>
           <% end %>
-          </div>
+          <%= render "favorites/favorites_button", post: post %>
           </div>
         </div>
-        <div>
-         
       </div>
     </li>
   <% end %>

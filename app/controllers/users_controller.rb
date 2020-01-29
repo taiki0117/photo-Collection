@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     
     if @user.save
       flash[:success] = "ユーザーを登録しました。"
-      session[:user_id] = @user.id #このコードを使ってログインしている状態にしてるので二行目のrequire_user_logged_inではじかれない。
+      session[:user_id] = @user.id #このコードを使ってログインしている状態にしてるので二行目のrequire_user_logged_inではじかれない。※自主学習
       redirect_to @user  #user_path(@user.id)を略している
     else
       flash[:danger] = "ユーザーの登録に失敗しました。"
@@ -29,12 +29,27 @@ class UsersController < ApplicationController
   end
 
   def edit
+    @user = User.find(params[:id]) #編集するユーザを取得
   end
 
   def update
+    @user = User.find(params[:id])
+
+    if @user.update(user_params)
+      flash[:success] = '正常に更新されました'
+      redirect_to @user
+    else
+      flash.now[:danger] = '更新されませんでした'
+      render :edit
+    end
   end
 
   def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+
+    flash[:success] = "退会しました。"
+    redirect_to login_url
   end
   
   def followings
@@ -49,9 +64,15 @@ class UsersController < ApplicationController
     counts(@user)
   end
   
+  def likes
+    @user = User.find(params[:id])
+    @fav_posts = @user.fav_posts.page(params[:page])
+    counts(@user)
+  end
+  
   private
   
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:name, :email, :image, :password, :password_confirmation)
   end
 end

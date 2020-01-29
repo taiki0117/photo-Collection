@@ -4,8 +4,12 @@
       <div class="card-header">
         <h3 class="card-title"><%= @user.name %></h3>
       </div>
-      <div class="card-body">
-        <img class="rounded img-fluid" src="<%= gravatar_url(@user, { size: 500 }) %>" alt="">
+      <div class="card-body text-center">
+        <% if current_user.image? %>
+          <%= image_tag current_user.image.url %>
+        <% else %>
+          <img class="rounded img-fluid" src="<%= gravatar_url(@user, { size: 500 }) %>" alt="">
+        <% end %>
       </div>
     </div>
     <%= render "relationships/follow_button", user: @user %>
@@ -15,7 +19,7 @@
       <li class="nav-item"><a href="<%= user_path(@user) %>" class="nav-link <%= 'active' if current_page?(user_path(@user)) %>">Timeline <span class="badge badge-secondary"><%= @count_posts %></span></a></li>
       <li class="nav-item"><a href="<%= followings_user_path(@user) %>" class="nav-link <%= 'active' if current_page?(followings_user_path(@user)) %>">Followings  <span class="badge badge-secondary"><%= @count_followings %></span></a></li>
       <li class="nav-item"><a href="<%= followers_user_path(@user) %>" class="nav-link <%= 'active' if current_page?(followers_user_path(@user)) %>">Followers  <span class="badge badge-secondary"><%= @count_followers %></span></a></li>
-      <li class="nav-item"><a href="#" class="nav-link">Likes</a></li>
+      <li class="nav-item"><a href="<%= likes_user_path(@user) %>" class="nav-link <%= 'active' if current_page?(likes_user_path(@user)) %>">Likes  <span class="badge badge-secondary"><%= @count_favorites %></span></a></li>
     </ul>
     <%= render 'posts/posts', posts: @posts %>
   </div>

@@ -9,10 +9,12 @@ Rails.application.routes.draw do
   resources :users do
     member do
       get :followings   #/users/:id/followingsというURLが生成される
-      get :followers    ##/users/:id/followersというURLが生成される
+      get :followers    #/users/:id/followersというURLが生成される
+      get :likes        #/users/:id/likesというURLが生成される
     end
   end
   
   resources :posts, only: [:edit, :create, :destroy]
   resources :relationships, only: [:create, :destroy] #フォロー／アンフォローできるようにする
+  resources :favorites, only: [:create, :destroy]
 end
