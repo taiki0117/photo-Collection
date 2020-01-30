@@ -1,16 +1,25 @@
 class PostsController < ApplicationController
   before_action :require_user_logged_in
   before_action :correct_user, only: [:edit, :update, :destroy]
+  
+  def index
+      @posts = current_user.feed_posts.order(id: :desc).page(params[:page]) #feed_postsでタイムラインに対応させている
+      #user.rbに定義されているfeed_postsメソッドを使えるのはcurrent_userユーザーの記述によってユーザーモデルを引き継いでいるから。
+  end
+  
+  def new
+    @post = current_user.posts.build
+  end
 
   def create
     @post = current_user.posts.build(post_params)
     if @post.save
       flash[:success] = '写真を投稿しました。'
-      redirect_to root_url
+      redirect_to user_path(current_user.id)
     else
       @posts = current_user.feed_posts.order(id: :desc).page(params[:page]) #feed_postsでタイムラインに対応させている
       flash.now[:danger] = '写真の投稿に失敗しました。'
-      render 'toppages/index'
+      render :new
     end
   end
   
@@ -23,7 +32,7 @@ class PostsController < ApplicationController
 
     if @post.update(post_params)
       flash[:success] = '更新されました'
-      redirect_to user_path((current_user.id))
+      redirect_to user_path(current_user.id)
     else
       flash.now[:danger] = '更新されませんでした'
       render :edit
@@ -45,7 +54,7 @@ class PostsController < ApplicationController
   def correct_user    #投稿がログインユーザーの物なのか確認している
     @post = current_user.posts.find_by(id: params[:id])
     unless @post
-      redirect_to root_url
+      redirect_to user_path(current_user.id)
     end
   end
 end

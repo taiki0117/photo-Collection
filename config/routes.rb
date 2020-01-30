@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :posts, only: [:edit, :update, :create, :destroy]
+  resources :posts, only: [:index, :new, :edit, :update, :create, :destroy]
   resources :relationships, only: [:create, :destroy] #フォロー／アンフォローできるようにする
   resources :favorites, only: [:create, :destroy]
 end
