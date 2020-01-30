@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :require_user_logged_in, only: [:index, :show, :edit] #ログインしていないと表示できないようにしている
+  before_action :correct_user, only: [:edit, :update, :destroy]
   
   def index     #ユーザー一覧ページ。ユーザーの一覧を取得
     @users = User.order(id: :desc).page(params[:page]).per(10)
@@ -74,5 +75,12 @@ class UsersController < ApplicationController
   
   def user_params
     params.require(:user).permit(:name, :email, :image, :password, :password_confirmation)
+  end
+  
+  def correct_user    #ユーザー編集ページがログインユーザーの物なのか確認している
+    user = User.find(params[:id])
+    if current_user != user
+      redirect_to user_path(current_user.id)
+    end
   end
 end

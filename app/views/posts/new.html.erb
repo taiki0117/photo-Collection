@@ -3,6 +3,7 @@
 </div>
 <div class="col-sm-4 offset-sm-4">
   <%= form_with(model: @post, local: true) do |f| %>
+  <%= render "layouts/error_messages", model: f.object %>
     <div class="form-group">
         <%= f.label "画像をアップロード" %>
         <%= f.file_field :image, class: 'form-control' %>
