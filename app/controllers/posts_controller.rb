@@ -1,7 +1,6 @@
 class PostsController < ApplicationController
   before_action :require_user_logged_in
-  before_action :correct_user, only: [:destroy]
-  
+  before_action :correct_user, only: [:edit, :update, :destroy]
 
   def create
     @post = current_user.posts.build(post_params)
@@ -12,6 +11,22 @@ class PostsController < ApplicationController
       @posts = current_user.feed_posts.order(id: :desc).page(params[:page]) #feed_postsでタイムラインに対応させている
       flash.now[:danger] = '写真の投稿に失敗しました。'
       render 'toppages/index'
+    end
+  end
+  
+  def edit
+    @post = Post.find(params[:id]) #編集する投稿を取得
+  end
+
+  def update
+    @post = Post.find(params[:id])
+
+    if @post.update(post_params)
+      flash[:success] = '更新されました'
+      redirect_to user_path((current_user.id))
+    else
+      flash.now[:danger] = '更新されませんでした'
+      render :edit
     end
   end
 

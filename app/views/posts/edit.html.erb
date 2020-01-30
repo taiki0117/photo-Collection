@@ -1,2 +1,17 @@
-<h1>Posts#edit</h1>
-<p>Find me in app/views/posts/edit.html.erb</p>
+<div class="text-center">
+  <h1>投稿の編集</h1>
+</div>
+<div class="col-sm-4 offset-sm-4">
+  <%= form_with(model: @post, local: true) do |f| %>
+    <div class="form-group">
+        <%= f.label "画像をアップロード" %>
+        <%= f.file_field :image, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+        <%= f.label "コメント" %>
+        <%= f.text_area :content, class: 'form-control', rows: 5 %>
+    </div>
+      <%= f.submit '編集を投稿する', class: 'btn btn-primary btn-block' %>
+      <%= link_to "写真を削除する", @post, method: :delete, data: { confirm: "本当に削除してもよろしいですか？" }, class: "btn btn-danger btn-block" %>
+  <% end %>
+</div>

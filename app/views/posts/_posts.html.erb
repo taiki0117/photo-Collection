@@ -13,11 +13,14 @@
             </div>
           <% end %>
           <div class="col-sm-7">
-          <p class="mb-10"><%= simple_format(post.content) %></p>
-           <% if current_user == post.user %>
-            <%= link_to "削除", post, method: :delete, data: { confirm: "本当に削除してもよろしいですか？" }, class: 'btn btn-danger btn-sm' %>
-          <% end %>
-          <%= render "favorites/favorites_button", post: post %>
+            <p class="mb-10"><%= simple_format(post.content) %></p>
+           
+            <%= render "favorites/favorites_button", post: post %>
+            
+            <% if current_user == post.user %>
+              <%= link_to "写真を編集する", edit_post_path(post), class: "btn btn-danger btn-sm" %>
+            <% end %>
+            
           </div>
         </div>
       </div>
